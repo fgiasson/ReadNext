@@ -1,0 +1,14 @@
+.env
+.myconfig
+dist
+chroma_db
+docs
+recommendations
+build
+readnext.egg-info
+myconfig.sh
+.pytest_cache
+__pycache__
+.venv
+.vscode
+.DS_Store

@@ -1,0 +1,8 @@
+export COHERE_API_KEY=""
+export ZOTERO_LIBRARY_ID=""
+export ZOTERO_LIBRARY_TYPE="user"
+export ZOTERO_API_KEY=""
+export ZOTERO_INTERESTING_PAPERS_COLLECTION="Propositions"
+export CHROMA_DB_PATH=""
+export DOCS_PATH=""
+export RECOMMENDATIONS_PATH=""

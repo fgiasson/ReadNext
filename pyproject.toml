@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["chroma_db*",
+           "docs*",
+           "recommendations*",
+           "scripts*",
+           ".env",
+           "tests*"] # excluded as package discovery, not as a package, this is why it still appears when building the readnext package
+
+[project]
+name = "readnext"
+version = "0.0.1"
+authors = [
+  { name="Frederick Giasson", email="fred@fgiasson.com" },
+]
+description = "ReadNext suggests the best papers for you to read next from the ArXiv."
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "GNU GPLv3"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "arxiv",
+    "cohere",
+    "pypdf",
+    "pyzotero",
+    "typer[all]",
+    "nameparser",
+    "python-dotenv",
+    "chromadb >= 0.4.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/fgiasson/readnext"
+"Bug Tracker" = "https://github.com/fgiasson/readnext/issues"
+
+[project.scripts]
+readnext = "readnext.main:app"
