@@ -123,6 +123,7 @@ def save_personalized_papers_in_zotero(ids: dict, with_artifacts: bool):
                 creators.append({'creatorType': 'author', 'firstName': name.first, 'lastName': name.last})
 
             template['abstractNote'] = result.summary
+            template['creators'] = creators
             template['url'] = result.entry_id
             template['DOI'] = result.doi
             template['repository'] = 'arXiv'
