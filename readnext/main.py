@@ -21,21 +21,19 @@ def arxiv_sub_categories():
 
 @app.command()
 def personalized_papers(category: str, 
-                        zotero_collection: str, 
-                        save_in_zotero: Annotated[bool, 
-                                                  typer.Option("--save-in-zotero", 
-                                                               "-s",
-                                                               help="Save personalized papers in Zotero.")] = False, 
+                        focus_collection: str, 
+                        proposals_collection: Annotated[str, 
+                                                        typer.Option("--proposals-collection",
+                                                        help="Save personalized papers in Zotero in target Zotero collection.")] = "", 
                         with_artifacts: Annotated[bool, 
                                                   typer.Option("--with-artifacts", 
                                                                "-a",
                                                                help="Add paper artifacts (PDFs & summary files) to Zotero when saving.")] = False,                                                               
                         nb_proposals=10):
-    """Get personalized papers of a `zotero-collection` from an ArXiv `category`. 
+    """Get personalized papers of a `focus-collection` from an ArXiv `category`. 
     If the category is `all` then all categories that have been locally synced will be used.
-    if --in_zotero is set to True, then the papers will be uploaded to the 
-    `ZOTERO_INTERESTING_PAPERS_COLLECTION` Zotero collection, which is the default behaviour,
-    otherwise it will only be displayed to the command line.
+    if --proposals-collection is set, then the papers will be uploaded to the 
+    that Zotero collection, otherwise it will only be displayed to the command line.
     """
 
     # Step 1: Make sure the category exists
@@ -50,12 +48,12 @@ def personalized_papers(category: str,
 
         # Step 4: get personalized papers
         print("[green]Get personalized papers...[/green]")
-        ids = get_personalized_papers(category, zotero_collection, nb_proposals)
+        ids = get_personalized_papers(category, focus_collection, nb_proposals)
 
         # Step 5: save personalized papers in Zotero
-        if bool(save_in_zotero):
+        if proposals_collection != "":
             print("[green]Saving personalized papers in Zotero...[/green]")
-            save_personalized_papers_in_zotero(ids, with_artifacts)
+            save_personalized_papers_in_zotero(ids, proposals_collection, with_artifacts)
 
         # Step 6: display personalized papers to the command line
         search = arxiv.Search(id_list=ids.keys())

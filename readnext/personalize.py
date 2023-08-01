@@ -80,9 +80,9 @@ def get_pdf_summary(pdf):
 
     return res.summary
 
-def check_already_in_zotero_proposals(title: str):
+def check_already_in_zotero_proposals(title: str, proposals_collection: str):
     """Check if a paper is already in the proposals collection."""
-    for item in get_target_collection_items(os.environ.get('ZOTERO_INTERESTING_PAPERS_COLLECTION')):
+    for item in get_target_collection_items(proposals_collection):
         if item['data']['itemType'] != 'attachment':
             if 'title' in item['data']:
                 if item['data']['title'] == title:
@@ -90,9 +90,9 @@ def check_already_in_zotero_proposals(title: str):
     
     return False
 
-def save_personalized_papers_in_zotero(ids: dict, with_artifacts: bool):
+def save_personalized_papers_in_zotero(ids: dict, proposals_collection, with_artifacts: bool):
     """Get all personalized papers propositions and upload them to the 
-    `ZOTERO_INTERESTING_PAPERS_COLLECTION` Zotero collection.
+    `proposals_collection` Zotero collection.
     
     If `with_artifacts=True`, then all documents artifacts will be
     uploaded to Zotero as well (namely PDFs and summary documents), 
@@ -107,7 +107,7 @@ def save_personalized_papers_in_zotero(ids: dict, with_artifacts: bool):
 
         for index, result in enumerate(search.results()):
             # skip if the paper is already in the proposals collection
-            if(check_already_in_zotero_proposals(result.title)):
+            if(check_already_in_zotero_proposals(result.title, proposals_collection)):
                 if not progress.finished:
                     progress.update(task, advance=1)
                 continue
@@ -129,7 +129,7 @@ def save_personalized_papers_in_zotero(ids: dict, with_artifacts: bool):
             template['repository'] = 'arXiv'
             template['archiveID'] = 'arxiv:' + result.get_short_id()
             template['libraryCatalog'] = 'arXiv.org'
-            template['collections'] = [get_collection_id_from_name(os.environ.get('ZOTERO_INTERESTING_PAPERS_COLLECTION'))]
+            template['collections'] = [get_collection_id_from_name(proposals_collection)]
 
             zot.check_items([template])
 

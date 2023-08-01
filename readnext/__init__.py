@@ -12,7 +12,6 @@ def config_exists(env_var: str):
         exit()
 
 config_exists('ZOTERO_API_KEY')
-config_exists('ZOTERO_INTERESTING_PAPERS_COLLECTION')
 config_exists('ZOTERO_LIBRARY_TYPE')
 config_exists('ZOTERO_LIBRARY_ID')
 config_exists('COHERE_API_KEY')

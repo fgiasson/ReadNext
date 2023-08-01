@@ -51,7 +51,6 @@ ReadNext currently needs to be configured using the environment variables of you
 |ZOTERO_LIBRARY_ID| Your personal library ID as defined in Zotero's backend. This [ID will appears here](https://www.zotero.org/settings/keys) as `Your userID for use in API calls is 750`|
 |ZOTERO_LIBRARY_TYPE| Type of library: `user` or `group`|
 |ZOTERO_API_KEY| You Zotero API Key, [it needs to be created and managed here](https://www.zotero.org/settings/keys).|
-|ZOTERO_INTERESTING_PAPERS_COLLECTION| This is the name/title of the Zotero Collection where you want the ReadNext papers proposals to be saved within Zotero|
 |CHROMA_DB_PATH| This is the local path where you want the embedding database management system to save its indexes (ex: `/Users/me/.readnext/chroma_db/`)|
 |DOCS_PATH| This is the local path where you want the PDF files of the papers from arXiv to be saved locally (ex: `/Users/me/.readnext/docs/`)|
 |RECOMMENDATIONS_PATH| This is the local path where you want the recommended papers to be saved locally (ex: `/Users/me/.readnext/recommendations/`)|
@@ -99,7 +98,6 @@ export COHERE_API_KEY=""
 export ZOTERO_LIBRARY_ID=""
 export ZOTERO_API_KEY=""
 export ZOTERO_LIBRARY_TYPE="user"
-export ZOTERO_INTERESTING_PAPERS_COLLECTION="Propositions"
 export CHROMA_DB_PATH="/Users/[MY-USER/.readnext/chroma_db/"
 export DOCS_PATH="/Users/[MY-USER]/.readnext/docs/"
 export RECOMMENDATIONS_PATH="/Users/[MY-USER]/.readnext/recommendations/"
@@ -168,15 +166,17 @@ To get new papers proposals, you have to run the `personalized-papers` command. 
 
 Then you also have three options available:
 
- - `--save-in-zotero` / `-s`: which tells ReadNext that you want to save the proposed papers in Zotero. If you don't use this option, ReadNext will only print the proposed papers in the terminal, but will not save them in Zotero. The default behaviour is that you don't save them in Zotero.
+ - `--proposals-collection`: which tells ReadNext that you want to save the proposed papers in Zotero, in the Zotero Collection specified by the argument. If you don't use this option, ReadNext will only print the proposed papers in the terminal, but will not save them in Zotero. The default behaviour is that you don't save them in Zotero.
  - `--with-artifacts` / `-a`: which tells ReadNext that you want to save the artifacts (PDF file of the papers and their summarization) into Zotero. This is the recommended workflow, but it requires a lot more space in your Zotero account. If you want to do this, you will most likely need to subscribe to one of their paid option.
  - `--nb-proposals`: which tells ReadNext how many papers you want to be proposed. The default value is 10.
 
-The following command will propose 3 papers from the `cs.AI` caterory, based on the `Focus` collection in my Zotero library, save them in Zotero with all related artifacts:
+The following command will propose 3 papers from the `cs.AI` caterory, based on the `Readnext-Focus-LLM` collection in my Zotero library, save them in Zotero in the `Readnext-Propositions-LLM` with all related artifacts:
 
 ```sh
-readnext personalized-papers cs.AI Focus --save-in-zotero --with-artifacts --nb-proposals=3
+readnext personalized-papers cs.AI Readnext-Focus-LLM --proposals-collection=Readnext-Propositions-LLM --with-artifacts --nb-proposals=3
 ```
+As you can see, you can easily create a series of topics you want papers proposals around, where each of the topic is defined by a series of specific papers that you read and found important for your research.
+
 
 Here is what it looks like in the terminal:
 
