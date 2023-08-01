@@ -56,7 +56,7 @@ def get_personalized_papers(category: str, zotero_collection: str, nb_proposals=
     ids = {}
 
     if exists(category):
-        papers_category_collection = chroma_client.get_or_create_collection(name=category)
+        papers_category_collection = chroma_client.get_or_create_collection(name="zotero_" + category)
 
         co = cohere.Client(os.environ.get('COHERE_API_KEY'))
 

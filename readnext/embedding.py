@@ -43,7 +43,7 @@ def embed_category_papers(category: str):
         #   1. a general one with all and every embeddings called 'all'
         #   2. one for the specific ArXiv category
         papers_all_collection = chroma_client.get_or_create_collection(name="all")
-        papers_category_collection = chroma_client.get_or_create_collection(name=category)
+        papers_category_collection = chroma_client.get_or_create_collection(name="zotero_" + category)
 
         with Progress() as progress:
             folder_path = get_docs_path(category)
