@@ -1,0 +1,9 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_main.ipynb
+      - 01_arxiv_categories.ipynb
+      - 02_arxiv_sync.ipynb
+      - 03_embedding.ipynb
+      - 04_personalize.ipynb
