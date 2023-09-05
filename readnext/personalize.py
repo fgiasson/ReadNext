@@ -17,10 +17,12 @@ from readnext.embedding import pdf_to_text
 from rich import print
 from rich.progress import Progress
 
+# %% ../nbs/04_personalize.ipynb 4
+#| eval: false
 # Configuring Zotero for the user's personal context
 zot = zotero.Zotero(os.environ.get('ZOTERO_LIBRARY_ID'), os.environ.get('ZOTERO_LIBRARY_TYPE'), os.environ.get('ZOTERO_API_KEY'))
 
-# %% ../nbs/04_personalize.ipynb 5
+# %% ../nbs/04_personalize.ipynb 6
 def get_collection_id_from_name(collection_name: str) -> str:
     """Return the ID of a collection from its name. 
        Return an empty string if no collection's name doesn't exists.
@@ -31,7 +33,7 @@ def get_collection_id_from_name(collection_name: str) -> str:
         
     return ''
 
-# %% ../nbs/04_personalize.ipynb 7
+# %% ../nbs/04_personalize.ipynb 8
 def get_target_collection_items(collection_name: str):
     """Given the name of a Zotero collection, return all the items from that collection."""
     collection = get_collection_id_from_name(collection_name)
@@ -41,7 +43,7 @@ def get_target_collection_items(collection_name: str):
     else:
         return {}
 
-# %% ../nbs/04_personalize.ipynb 9
+# %% ../nbs/04_personalize.ipynb 10
 def create_interests_corpus(collection_name: str) -> str:
     """Create a corpus of interests from all the documents
     existing in a Zotero collection. This corpus will be used to
@@ -58,7 +60,7 @@ def create_interests_corpus(collection_name: str) -> str:
     
     return interests_corpus
 
-# %% ../nbs/04_personalize.ipynb 11
+# %% ../nbs/04_personalize.ipynb 12
 def get_personalized_papers(category: str, zotero_collection: str, nb_proposals=10) -> dict:
     """Given a ArXiv category and a Zotero personalization collection. 
     Returns a dictionary where the keys are the personalized ArXiv IDs, 
@@ -83,7 +85,7 @@ def get_personalized_papers(category: str, zotero_collection: str, nb_proposals=
 
     return ids
 
-# %% ../nbs/04_personalize.ipynb 13
+# %% ../nbs/04_personalize.ipynb 14
 def get_pdf_summary(pdf) -> str:
     text = pdf_to_text(pdf)
 
@@ -93,7 +95,7 @@ def get_pdf_summary(pdf) -> str:
 
     return res.summary
 
-# %% ../nbs/04_personalize.ipynb 15
+# %% ../nbs/04_personalize.ipynb 16
 def check_already_in_zotero_proposals(title: str, proposals_collection: str) -> bool:
     """Check if a paper is already in the proposals collection."""
     for item in get_target_collection_items(proposals_collection):
@@ -104,7 +106,7 @@ def check_already_in_zotero_proposals(title: str, proposals_collection: str) -> 
     
     return False
 
-# %% ../nbs/04_personalize.ipynb 17
+# %% ../nbs/04_personalize.ipynb 18
 def save_personalized_papers_in_zotero(ids: dict, proposals_collection, with_artifacts: bool):
     """Get all personalized papers propositions and upload them to the 
     `proposals_collection` Zotero collection.
