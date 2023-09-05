@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from rich import print
 
+__version__ = "0.0.3"
+
 load_dotenv()
 
 # check for the existance of all configuration options

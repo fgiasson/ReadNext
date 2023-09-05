@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "ReadNext"
+  site-url: "https://fgiasson.github.io/ReadNext"
+  description: "ReadNext is a command line tool that can be used to generate personalized paper recommendations based on your research interests. It is designed to be used as a daily routine to help you discover new papers that are relevant to your research focus."
+  repo-branch: main
+  repo-url: "https://github.com/fgiasson/ReadNext"
