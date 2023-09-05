@@ -12,3 +12,5 @@ __pycache__
 .venv
 .vscode
 .DS_Store
+_docs/
+_proc/
