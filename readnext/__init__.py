@@ -11,7 +11,6 @@ def config_exists(env_var: str):
     v = env_var.upper()
     if not os.environ.get(v) or os.environ.get(v) == '':
         print("[bold red]Error:[/bold red] [italic red]Configuration option not set.[/italic red] [yellow]Please set the [bold]" + v + "[/bold] environment variable.[/yellow]\n")
-        exit()
 
 config_exists('ZOTERO_API_KEY')
 config_exists('ZOTERO_LIBRARY_TYPE')
