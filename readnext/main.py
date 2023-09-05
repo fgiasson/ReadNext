@@ -23,19 +23,19 @@ def version():
     """Get the current installed version of ReadNext"""
     print(f"Version: {__version__}")
 
-# %% ../nbs/00_main.ipynb 9
+# %% ../nbs/00_main.ipynb 10
 @app.command()
 def arxiv_top_categories():
     "Display ArXiv main categories. Keys are case sensitive."
     print(main)
 
-# %% ../nbs/00_main.ipynb 12
+# %% ../nbs/00_main.ipynb 13
 @app.command()
 def arxiv_sub_categories():
     "Display ArXiv sub categories. Keys are case sensitive."
     print(sub)
 
-# %% ../nbs/00_main.ipynb 15
+# %% ../nbs/00_main.ipynb 16
 @app.command()
 def personalized_papers(category: str, 
                         focus_collection: str, 
@@ -82,7 +82,7 @@ def personalized_papers(category: str,
 
 
 
-# %% ../nbs/00_main.ipynb 17
+# %% ../nbs/00_main.ipynb 18
 #| eval: false
 if __name__ == "__main__":
     app()
