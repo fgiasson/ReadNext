@@ -28,7 +28,7 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf tests/__pycache__
 	rm -rf readnext/__pycache__
-	nbdev_clean
+	nbdev_clean --clear_all
 
 # this bundles: nbdev_export, nbdev_test, nbdev_clean and nbdev_readme
 # it should be used before pushing to GitHub
