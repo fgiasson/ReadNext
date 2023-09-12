@@ -20,4 +20,8 @@ jobs:
       MODELS_PATH: './models'
       DOCS_PATH: './docs'
       RECOMMENDATIONS_PATH: './recommendations'
-    steps: [uses: fastai/workflows/quarto-ghp@master]
+    steps: 
+      - name: Setup quarto-gh with Python 10
+        uses: fastai/workflows/quarto-ghp@master
+        with:
+          version: '3.10' # python version to use for this step    
