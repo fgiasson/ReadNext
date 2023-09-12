@@ -18,7 +18,7 @@ authors = [
 ]
 description = "ReadNext suggests the best papers for you to read next from the ArXiv."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 license = {text = "GNU GPLv3"}
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -32,7 +32,10 @@ dependencies = [
     "typer[all]",
     "nameparser",
     "python-dotenv",
-    "chromadb >= 0.4.0"
+    "chromadb >= 0.4.0",
+    "transformers",
+    "torch",
+    "pycryptodome"
 ]
 
 [project.urls]
