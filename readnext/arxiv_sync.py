@@ -3,18 +3,18 @@
 # %% auto 0
 __all__ = ['get_arxiv_pdfs_url', 'get_docs_path', 'delete_broken_pdf', 'sync_arxiv']
 
-# %% ../nbs/02_arxiv_sync.ipynb 5
+# %% ../nbs/02_arxiv_sync.ipynb 6
 import concurrent.futures
 import feedparser
 import os
 import re
 import urllib.request
 from pypdf import PdfReader
-from readnext.arxiv_categories import exists
+from .arxiv_categories import exists
 from rich import print
 from rich.progress import Progress
 
-# %% ../nbs/02_arxiv_sync.ipynb 7
+# %% ../nbs/02_arxiv_sync.ipynb 8
 def get_arxiv_pdfs_url(category: str) -> list:
     "Get all the papers refferenced in the daily RSS feed on ArXiv for input 'category'."
     if exists(category):
@@ -30,12 +30,12 @@ def get_arxiv_pdfs_url(category: str) -> list:
     else:
         return []
 
-# %% ../nbs/02_arxiv_sync.ipynb 9
+# %% ../nbs/02_arxiv_sync.ipynb 10
 def get_docs_path(category: str) -> str:
     "Generate the proper docs path from a category ID"
     return os.environ.get('DOCS_PATH').rstrip('/') + '/' + category + '/'
 
-# %% ../nbs/02_arxiv_sync.ipynb 13
+# %% ../nbs/02_arxiv_sync.ipynb 14
 def delete_broken_pdf(category: str):
     """Detect and delete broken PDF files.
        TODO Next iteration needs a better fail over with retry when PDF files are broken from a download.
@@ -56,7 +56,7 @@ def delete_broken_pdf(category: str):
             os.remove(docs_path + pdf_file)
             print('[italic yellow]Broken file deleted: ' + docs_path + pdf_file + '   [' + str(exc) + '][/italic yellow]')
 
-# %% ../nbs/02_arxiv_sync.ipynb 17
+# %% ../nbs/02_arxiv_sync.ipynb 19
 def sync_arxiv(category: str):
     """Synchronize all latest arxiv papers for `category`.
        Concurrently download three PDF files from ArXiv. 

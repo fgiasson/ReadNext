@@ -17,6 +17,7 @@ jobs:
       ZOTERO_LIBRARY_TYPE: 'user'
       ZOTERO_API_KEY: ''
       CHROMA_DB_PATH: './chroma_db'
+      MODELS_PATH: './models'
       DOCS_PATH: './docs'
       RECOMMENDATIONS_PATH: './recommendations'
     steps: [uses: fastai/workflows/quarto-ghp@master]

@@ -12,8 +12,8 @@ import cohere
 import os
 from nameparser import HumanName
 from pyzotero import zotero
-from readnext.arxiv_categories import exists
-from readnext.embedding import pdf_to_text
+from .arxiv_categories import exists
+from .embedding import pdf_to_text, get_embeddings, embedding_system
 from rich import print
 from rich.progress import Progress
 
@@ -37,6 +37,7 @@ def get_target_collection_items(collection_name: str):
     collection = get_collection_id_from_name(collection_name)
 
     if collection != "":        
+        zot = zotero.Zotero(os.environ.get('ZOTERO_LIBRARY_ID'), os.environ.get('ZOTERO_LIBRARY_TYPE'), os.environ.get('ZOTERO_API_KEY'))
         return zot.collection_items(collection)
     else:
         return {}
@@ -63,19 +64,16 @@ def get_personalized_papers(category: str, zotero_collection: str, nb_proposals=
     """Given a ArXiv category and a Zotero personalization collection. 
     Returns a dictionary where the keys are the personalized ArXiv IDs, 
     and the value the distance to the personalization embedding."""
+
     chroma_client = chromadb.PersistentClient(path=os.environ.get('CHROMA_DB_PATH'))
-    
+
     ids = {}
 
     if exists(category): 
-        papers_category_collection = chroma_client.get_or_create_collection(name='all' if category == 'all' else 'arxiv_' + category )
-
-        co = cohere.Client(os.environ.get('COHERE_API_KEY'))
-
-        interests_embedding = co.embed([create_interests_corpus(zotero_collection)])
+        papers_category_collection = chroma_client.get_or_create_collection(name='all' + embedding_system() if category == 'all' else 'arxiv_' + category + '_' + embedding_system())
 
         interesting_papers = papers_category_collection.query(
-            query_embeddings=interests_embedding.embeddings,
+            query_embeddings=get_embeddings(create_interests_corpus(zotero_collection)),
             n_results=int(nb_proposals)) # need to force int() to convert when from the command line.
 
         for index, pdf in enumerate(interesting_papers['ids'][0]):

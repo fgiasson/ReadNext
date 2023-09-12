@@ -37,23 +37,32 @@ You can easily install the ReadNext command line tool using `pip`:
 
 ## Requirements
 
-ReadNext relies on two fundamental external services to enhance its
-functionality:
+ReadNext relies on one fundamental external services to create the
+propose user workflow:
 
 - `Zotero`: Zotero serves as the primary papers management tool, playing
   a pivotal role in ReadNext’s workflow. To configure ReadNext on your
   local computer, you have to create a Zotero account. If you do not
   already have one, you will have to create one for yourself, please
   refer to the section below.
-- `Cohere`: ReadNext leverages Cohere’s services for generating paper
-  embeddings and summaries. These embeddings and summaries are essential
-  components for providing personalized and relevant paper
-  recommendations. *It is necessary to create an account with Cohere. We
-  will be expending support for additional embeddings and summarization
-  services in the future, offering increased flexibility.*
 
-By integrating these services, ReadNext helps in discovering papers that
-align with your research interests and focus.
+By integrating Zotero, ReadNext helps in discovering papers that align
+with your research interests and focus.
+
+The second piece of the command line tool is the embedding system. That
+system is used to create embeddings that are used to recommend papers to
+users according to their current research focus. By default, ReadNext is
+using the `BAAI/bge-base-en` [model from Hugging
+Face](https://huggingface.co/BAAI/bge-base-en). Optionally, you can use
+the Cohere embedding service instead. The processing is a little bit
+faster depending on your local desktop, but it requires and additional
+dependency.
+
+Also note that the performance between the two systems are comparable.
+In my experience, about 80% of the propositions are the same, and the
+remaining 20% that are different yeld no major difference in accuracy.
+However, I do prefer the `BAAI/bge-base-en` propositions a little
+better.
 
 ### Zotero Account
 
@@ -67,7 +76,7 @@ Take the time to refer to [their extensive online
 documentation](https://www.zotero.org/support/) to get to know its full
 potential.
 
-### Cohere Account
+### Cohere Account (Optional)
 
 For Cohere, you will have to [create an account and login on their
 Dashboard](https://dashboard.cohere.ai/welcome/register). The services
@@ -87,6 +96,8 @@ currently needs to be configured:
 | ZOTERO_LIBRARY_TYPE  | Type of library: `user` or `group`                                                                                                                                      |
 | ZOTERO_API_KEY       | You Zotero API Key, [it needs to be created and managed here](https://www.zotero.org/settings/keys).                                                                    |
 | CHROMA_DB_PATH       | This is the local path where you want the embedding database management system to save its indexes (ex: `/Users/me/.readnext/chroma_db/`)                               |
+| EMBEDDING_SYSTEM     | This is the embedding system you want to use. One of: `BAAI/bge-base-en` (local) or `cohere`.                                                                           |
+| MODELS_PATH          | This is the local path where you want the models files to be saved on your local file system (ex: `/Users/me/.readnext/models/`)                                        |
 | DOCS_PATH            | This is the local path where you want the PDF files of the papers from arXiv to be saved locally (ex: `/Users/me/.readnext/docs/`)                                      |
 | RECOMMENDATIONS_PATH | This is the local path where you want the recommended papers to be saved locally (ex: `/Users/me/.readnext/recommendations/`)                                           |
 
@@ -149,7 +160,9 @@ export COHERE_API_KEY=""
 export ZOTERO_LIBRARY_ID=""
 export ZOTERO_API_KEY=""
 export ZOTERO_LIBRARY_TYPE="user"
+export EMBEDDING_SYSTEM="BAAI/bge-base-en"
 export CHROMA_DB_PATH="/Users/[MY-USER/.readnext/chroma_db/"
+export MODELS_PATH="/Users/[MY-USER]/.readnext/models/"
 export DOCS_PATH="/Users/[MY-USER]/.readnext/docs/"
 export RECOMMENDATIONS_PATH="/Users/[MY-USER]/.readnext/recommendations/"
 ```
@@ -175,11 +188,12 @@ you have read a paper, you can move it to another collection in your
 Zotero library, and ReadNext will learn from your feedback to improve
 the quality of the proposed papers.
 
-ReadNext is designed to be used with [Cohere](https://cohere.ai/), a
-free service that provides a powerful API to generate embeddings for
-text. ReadNext will use Cohere to generate embeddings for the papers in
-your Zotero library, and will use these embeddings to identify papers
-that are similar to your research focus.
+ReadNext is designed to be used with with an embedding system. It uses
+the system to generate embeddings for the papers in your Zotero library,
+and will use these embeddings to identify papers that are similar to
+your research focus. Two embedding systems are currently support: a
+local one using the `BAAI/bge-base-en` model from Hugging Face, and a
+remote one using the Cohere embedding service.
 
 ReadNext is designed to be used with [arXiv](https://arxiv.org/), a free
 service that provides access to scientific papers in the fields of
