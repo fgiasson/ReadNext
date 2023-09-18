@@ -134,8 +134,6 @@ def init():
     config_exists('RECOMMENDATIONS_PATH')
     config_check_one_exists(['COHERE_API_KEY', 'MODELS_PATH'])
 
-    chroma_client = chromadb.PersistentClient(path=os.environ.get('CHROMA_DB_PATH'))
-
     # download models if not already downloaded
     match embedding_system():
         case 'baai-bge-base-en':
