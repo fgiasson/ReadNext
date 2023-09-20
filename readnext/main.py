@@ -144,8 +144,10 @@ def init():
         case other:
             print("[bold red]Error:[/bold red] [italic red]Configuration option not set.[/italic red] [yellow]Please set the [bold]EMBEDDING_SYSTEM[/bold] environment variable to either [bold]BAAI/bge-base-en[/bold] or [bold]cohere[/bold].[/yellow]\n")            
 
+    # run app after initialization
+    app()
+
 # %% ../nbs/00_main.ipynb 26
 #| eval: false
 if __name__ == "__main__":
     init()
-    app()
