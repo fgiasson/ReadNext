@@ -24,6 +24,8 @@ def download_embedding_model(model_path: str, model_name: str):
     # Check if the directory already exists
     if not os.path.exists(model_path):
         os.makedirs(model_path)
+    else:
+        return
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
