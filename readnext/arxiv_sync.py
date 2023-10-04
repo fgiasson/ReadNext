@@ -49,8 +49,8 @@ def delete_broken_pdf(category: str):
     # try to open each PDF file
     for pdf_file in pdf_files:
         try:
-            pdf_file_obj = open(docs_path + pdf_file, 'rb')
-            pdf_reader = PdfReader(pdf_file_obj)
+            with open (docs_path + pdf_file, 'rb') as pdf_file_obj:
+                PdfReader(pdf_file_obj)
         except Exception as exc:
             # delete the PDF file if it is broken
             os.remove(docs_path + pdf_file)

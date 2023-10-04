@@ -86,14 +86,14 @@ def get_embeddings(text: str) -> list:
 # %% ../nbs/03_embedding.ipynb 24
 def pdf_to_text(file_path: str) -> str:
     """Read a PDF file and output it as a text string."""
-    pdf_file_obj = open(file_path, 'rb')
-    pdf_reader = PdfReader(pdf_file_obj)
-    text = ''
+    with open(file_path, 'rb') as pdf_file_obj:
+        pdf_reader = PdfReader(pdf_file_obj)
+        text = ''
 
-    for page in pdf_reader.pages:
-        text += page.extract_text()
+        for page in pdf_reader.pages:
+            text += page.extract_text()
 
-    return text
+        return text
 
 # %% ../nbs/03_embedding.ipynb 28
 def get_pdfs_from_folder(folder_path: str) -> list:
@@ -111,7 +111,7 @@ def embed_category_papers(category: str) -> bool:
     """Given a ArXiv category, create the embeddings for each of the PDF paper existing locally.
     Embeddings is currently using Cohere's embedding service.
     Returns True if successful, False otherwise."""
-    
+ 
     chroma_client = chromadb.PersistentClient(path=os.environ.get('CHROMA_DB_PATH'))
 
     if exists(category):
