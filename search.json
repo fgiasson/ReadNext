@@ -1,0 +1,303 @@
+[
+  {
+    "objectID": "personalize.html",
+    "href": "personalize.html",
+    "title": "Personalization",
+    "section": "",
+    "text": "import arxiv\nimport chromadb\nimport cohere\nimport os\nfrom nameparser import HumanName\nfrom pyzotero import zotero\nfrom readnext.arxiv_categories import exists\nfrom readnext.embedding import pdf_to_text, get_embeddings, embedding_system\nfrom rich import print\nfrom rich.progress import Progress"
+  },
+  {
+    "objectID": "personalize.html#imports",
+    "href": "personalize.html#imports",
+    "title": "Personalization",
+    "section": "",
+    "text": "import arxiv\nimport chromadb\nimport cohere\nimport os\nfrom nameparser import HumanName\nfrom pyzotero import zotero\nfrom readnext.arxiv_categories import exists\nfrom readnext.embedding import pdf_to_text, get_embeddings, embedding_system\nfrom rich import print\nfrom rich.progress import Progress"
+  },
+  {
+    "objectID": "personalize.html#get-a-zotero-collection-id-from-its-name",
+    "href": "personalize.html#get-a-zotero-collection-id-from-its-name",
+    "title": "Personalization",
+    "section": "Get a Zotero collection ID from its name",
+    "text": "Get a Zotero collection ID from its name\nWhen interacting with the Zotero API, it is always expecting a collection ID. However, it is very hard to get the ID of that collection from the Zotero user interface. This utility function is used to get the ID of a collection from its name.\n\n\nget_collection_id_from_name\n\n get_collection_id_from_name (collection_name:str)\n\nReturn the ID of a collection from its name. Return an empty string if no collection’s name doesn’t exists. The comparison is case insensitive."
+  },
+  {
+    "objectID": "personalize.html#get-all-the-items-of-a-zotero-collection-name",
+    "href": "personalize.html#get-all-the-items-of-a-zotero-collection-name",
+    "title": "Personalization",
+    "section": "Get all the items of a Zotero collection name",
+    "text": "Get all the items of a Zotero collection name\nGets all the items of a Zotero collection from its name. It will reuse the function get_collection_id_from_name to get the collection ID from its name. An item can be very broad, those are not just the PDF papers, it could be links to web pages, full text notes, etc.\n\n\nget_target_collection_items\n\n get_target_collection_items (collection_name:str)\n\nGiven the name of a Zotero collection, return all the items from that collection."
+  },
+  {
+    "objectID": "personalize.html#create-corpus-of-interests-from-zotero-collection",
+    "href": "personalize.html#create-corpus-of-interests-from-zotero-collection",
+    "title": "Personalization",
+    "section": "Create corpus of interests from Zotero collection",
+    "text": "Create corpus of interests from Zotero collection\nWhat we call a “corpus of interest” is a Zotero collection that contains all the papers that the user is currently focussing on in his research. This function will create a corpus of interest from a Zotero collection name.\nThis corpus of interest is used to create an “embedding of interest” that will be used to select the most relevant papers that are published every day.\n\n\ncreate_interests_corpus\n\n create_interests_corpus (collection_name:str)\n\nCreate a corpus of interests from all the documents existing in a Zotero collection. This corpus will be used to match related daily papers published on ArXiv."
+  },
+  {
+    "objectID": "personalize.html#get-personalized-papers",
+    "href": "personalize.html#get-personalized-papers",
+    "title": "Personalization",
+    "section": "Get personalized papers",
+    "text": "Get personalized papers\nQuery the embeddings space of the input category using the embedding of the corpus of interests. Returns nb_proposals more relevant papers.\n\n\nget_personalized_papers\n\n get_personalized_papers (category:str, zotero_collection:str,\n                          nb_proposals=10)\n\nGiven a ArXiv category and a Zotero personalization collection. Returns a dictionary where the keys are the personalized ArXiv IDs, and the value the distance to the personalization embedding."
+  },
+  {
+    "objectID": "personalize.html#get-the-summary-of-a-pdf-file",
+    "href": "personalize.html#get-the-summary-of-a-pdf-file",
+    "title": "Personalization",
+    "section": "Get the summary of a PDF file",
+    "text": "Get the summary of a PDF file\nIn addition, the user may want to have a summary of the paper (other than the abstract written by the author). If it is the case, then the paper’s text will be summarized by an external summarization service (currently Cohere) and will return the summary. That summary will then be added as an attachement to the paper’s item in Zotero.\n\n\nget_pdf_summary\n\n get_pdf_summary (pdf)"
+  },
+  {
+    "objectID": "personalize.html#check-if-a-given-paper-is-already-in-the-collection-of-proposed-papers",
+    "href": "personalize.html#check-if-a-given-paper-is-already-in-the-collection-of-proposed-papers",
+    "title": "Personalization",
+    "section": "Check if a given paper is already in the collection of proposed papers",
+    "text": "Check if a given paper is already in the collection of proposed papers\nThis is used to avoid duplicated papers in the Zotero collection, otherwise every time someone run ReadNext, it will duplicate the proposed papers if they were already proposed in the past.\n\n\ncheck_already_in_zotero_proposals\n\n check_already_in_zotero_proposals (title:str, proposals_collection:str)\n\nCheck if a paper is already in the proposals collection."
+  },
+  {
+    "objectID": "personalize.html#save-all-personalized-papers-in-zotero",
+    "href": "personalize.html#save-all-personalized-papers-in-zotero",
+    "title": "Personalization",
+    "section": "Save all personalized papers in Zotero",
+    "text": "Save all personalized papers in Zotero\nSave all the personalized papers in Zotero. By default, no artifacts are saved in Zotero. The reason is that users have 200mo free with their account, and that space is taken rapidly if we save artifacts days in days out. However, if the user is paying for more space, then he most likely want to have the artifacts saved in Zotero.\n\n\nsave_personalized_papers_in_zotero\n\n save_personalized_papers_in_zotero (ids:dict, proposals_collection,\n                                     with_artifacts:bool)\n\nGet all personalized papers propositions and upload them to the proposals_collection Zotero collection.\nIf with_artifacts=True, then all documents artifacts will be uploaded to Zotero as well (namely PDFs and summary documents), but it will take more space to the Zotero account and will be slower to process."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Read Next",
+    "section": "",
+    "text": "Every day, approximately 500 new papers are published in the cs category on arXiv, with tens more in cs.AI alone. Amidst the recent craze around Generative AI, I found it increasingly challenging to keep up with the rapid influx of papers. Distilling the ones that were most relevant to my work and my employer’s interests became a daunting task.\nReadNext was born out of these pressing needs:\n\nThe necessity for a command-line tool, one that could be executed directly or scheduled as a cron job.\nThe requirement to access the latest papers from arXiv.\nThe integration with Zotero, an excellent tool for managing academic papers.\nThe ability to propose a selection of x potentially relevant papers based on my current research focus.\nThe proposed papers should be accessible from the command line.\nThe proposed papers should also be easily uploaded to Zotero.\n\nThe key focus is to recommend papers that align with my evolving interests and research objectives, which may change on a daily basis and need to be continuously accounted for."
+  },
+  {
+    "objectID": "index.html#readnext-a-personal-papers-recommender",
+    "href": "index.html#readnext-a-personal-papers-recommender",
+    "title": "Read Next",
+    "section": "",
+    "text": "Every day, approximately 500 new papers are published in the cs category on arXiv, with tens more in cs.AI alone. Amidst the recent craze around Generative AI, I found it increasingly challenging to keep up with the rapid influx of papers. Distilling the ones that were most relevant to my work and my employer’s interests became a daunting task.\nReadNext was born out of these pressing needs:\n\nThe necessity for a command-line tool, one that could be executed directly or scheduled as a cron job.\nThe requirement to access the latest papers from arXiv.\nThe integration with Zotero, an excellent tool for managing academic papers.\nThe ability to propose a selection of x potentially relevant papers based on my current research focus.\nThe proposed papers should be accessible from the command line.\nThe proposed papers should also be easily uploaded to Zotero.\n\nThe key focus is to recommend papers that align with my evolving interests and research objectives, which may change on a daily basis and need to be continuously accounted for."
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "Read Next",
+    "section": "Install",
+    "text": "Install\nYou can easily install the ReadNext command line tool using pip:\n  pip install readnext"
+  },
+  {
+    "objectID": "index.html#requirements",
+    "href": "index.html#requirements",
+    "title": "Read Next",
+    "section": "Requirements",
+    "text": "Requirements\nReadNext relies on one fundamental external services to create the propose user workflow:\n\nZotero: Zotero serves as the primary papers management tool, playing a pivotal role in ReadNext’s workflow. To configure ReadNext on your local computer, you have to create a Zotero account. If you do not already have one, you will have to create one for yourself, please refer to the section below.\n\nBy integrating Zotero, ReadNext helps in discovering papers that align with your research interests and focus.\nThe second piece of the command line tool is the embedding system. That system is used to create embeddings that are used to recommend papers to users according to their current research focus. By default, ReadNext is using the BAAI/bge-base-en model from Hugging Face. Optionally, you can use the Cohere embedding service instead. The processing is a little bit faster depending on your local desktop, but it requires and additional dependency.\nAlso note that the performance between the two systems are comparable. In my experience, about 80% of the propositions are the same, and the remaining 20% that are different yeld no major difference in accuracy. However, I do prefer the BAAI/bge-base-en propositions a little better.\n\nZotero Account\nIf you do not have a Zotero account yet, you can create one here for free. This will give you a basic account with 200MB of space, sufficient to get started. Afterwards, you can install the desktop application, mobile apps, and necessary browser plugins to fully integrate Zotero into your digital environment.\nTake the time to refer to their extensive online documentation to get to know its full potential.\n\n\nCohere Account (Optional)\nFor Cohere, you will have to create an account and login on their Dashboard. The services are completely free for the volume and size of request required by ReadNext."
+  },
+  {
+    "objectID": "index.html#configure",
+    "href": "index.html#configure",
+    "title": "Read Next",
+    "section": "Configure",
+    "text": "Configure\nReadNext currently needs to be configured using the environment variables of your terminal session. The following configuration options currently needs to be configured:\n\n\n\nOption\nDescription\n\n\n\n\nCOHERE_API_KEY\nCohere API Key as created in their Dashboard here\n\n\nZOTERO_LIBRARY_ID\nYour personal library ID as defined in Zotero’s backend. This ID will appears here as Your userID for use in API calls is 750\n\n\nZOTERO_LIBRARY_TYPE\nType of library: user or group\n\n\nZOTERO_API_KEY\nYou Zotero API Key, it needs to be created and managed here.\n\n\nCHROMA_DB_PATH\nThis is the local path where you want the embedding database management system to save its indexes (ex: /Users/me/.readnext/chroma_db/)\n\n\nEMBEDDING_SYSTEM\nThis is the embedding system you want to use. One of: BAAI/bge-base-en (local) or cohere.\n\n\nMODELS_PATH\nThis is the local path where you want the models files to be saved on your local file system (ex: /Users/me/.readnext/models/)\n\n\nDOCS_PATH\nThis is the local path where you want the PDF files of the papers from arXiv to be saved locally (ex: /Users/me/.readnext/docs/)\n\n\nRECOMMENDATIONS_PATH\nThis is the local path where you want the recommended papers to be saved locally (ex: /Users/me/.readnext/recommendations/)\n\n\n\n\nSetup Environment Variables\n\nFor Windows\n\nOpen the Command Prompt or PowerShell.\nUse the setx command to create a new environment variable permanently. For example, to set the ZOTERO_API_KEY, you can use the following command:\n\n  setx ZOTERO_API_KEY \"your_zotero_api_key_here\"\nThe changes will take effect after you open a new command prompt or restart your computer.\n\n\nMacOS and Linux:\n\nOpen the Terminal.\nUse the export command to set the environment variable for the current session. For example, to set the ZOTERO_API_KEY, use the following command:\n\nexport ZOTERO_API_KEY=\"your_zotero_api_key_here\"\nThis will set the ZOTERO_API_KEY variable for the current session only.\nTo make the variable permanent, add the export command to your shell’s configuration file. For example, if you’re using Bash, add the line to the ~/.bashrc or ~/.bash_profile file. If you’re using Zsh, add it to the ~/.zshrc file. You can do this with a text editor or by using the following command:\necho 'export ZOTERO_API_KEY=\"your_zotero_api_key_here\"' &gt;&gt; ~/.bashrc\nReplace ~/.bashrc with the appropriate file name if you’re using a different shell configuration.\nAfter saving the environment variables, they will be available in your command line sessions, and any application that relies on them, such as ReadNext, will be able to access the configured values. Remember to restart your command line or open a new session after making changes to ensure the environment variables take effect.\nYou can verify that the environment variables are set by running the env command in your terminal session.\nHere is what the full export looks like:\nexport COHERE_API_KEY=\"\"\nexport ZOTERO_LIBRARY_ID=\"\"\nexport ZOTERO_API_KEY=\"\"\nexport ZOTERO_LIBRARY_TYPE=\"user\"\nexport EMBEDDING_SYSTEM=\"BAAI/bge-base-en\"\nexport CHROMA_DB_PATH=\"/Users/[MY-USER/.readnext/chroma_db/\"\nexport MODELS_PATH=\"/Users/[MY-USER]/.readnext/models/\"\nexport DOCS_PATH=\"/Users/[MY-USER]/.readnext/docs/\"\nexport RECOMMENDATIONS_PATH=\"/Users/[MY-USER]/.readnext/recommendations/\""
+  },
+  {
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
+    "title": "Read Next",
+    "section": "How it works?",
+    "text": "How it works?\nReadNext is a command line tool that can be used to generate personalized paper recommendations based on your research interests. It is designed to be used as a daily routine to help you discover new papers that are relevant to your research focus.\nThe tool is designed to be used in conjunction with Zotero, a free and open-source reference management software to manage your research library. ReadNext will use your Zotero library to identify your research interests and focus, and will propose papers that are relevant to your research focus.\nReadNext is designed to be used as a daily routine. It will propose a list of papers that are relevant to your research focus, and will save them in a dedicated collection in your Zotero library. You can then review the proposed papers and decide which ones you want to read. Once you have read a paper, you can move it to another collection in your Zotero library, and ReadNext will learn from your feedback to improve the quality of the proposed papers.\nReadNext is designed to be used with with an embedding system. It uses the system to generate embeddings for the papers in your Zotero library, and will use these embeddings to identify papers that are similar to your research focus. Two embedding systems are currently support: a local one using the BAAI/bge-base-en model from Hugging Face, and a remote one using the Cohere embedding service.\nReadNext is designed to be used with arXiv, a free service that provides access to scientific papers in the fields of mathematics, physics, astronomy, computer science, quantitative biology, statistics, and quantitative finance. ReadNext will use arXiv to identify the latest papers in your research focus, and will propose them to you as part of your daily routine.\nThe designed userflow is the following:\n\nAs a Zotero user, I will create one or multiple “Focus” collections in my Zotero library. Those are the collections where I will add the papers that are the most interesting to my current research. It is expected that the content of those collections will change over time as my research focus and interests evolves.\nOn a daily basis, I will run readnext in my terminal, or I will create a cron job to run it automatically for me.\n\nReadNext will fetch the latest papers from arXiv\nReadNext will identify the papers that are relevant to your research focus, as defined in Zotero\nReadNext will propose the relevant papers to me and add them to Zotero in a dedicated collection where proposed papers are saved\n\nI will go in Zotero, start to read the proposed papers, and if any are of a particular interest I will add them to one of the “Focus” collections\nReadNext will learn from your feedback to improve the quality of the proposed papers\n\nNow, let’s see how to actually do this."
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "Read Next",
+    "section": "Usage",
+    "text": "Usage\n\nHelp\nAny time, you can get contextual help for any command like this:\nreadnext --help\nreadnext personalized-papers --help\nThose commands will tell you which arguments and options are available for each command.\n\n\narXiv categories and subcategories\nYou can get the full list of arXiv categories and subcategories by running the following command:\nreadnext arxiv-top-categories\nreadnext arxiv-sub-categories\nThose are the categories where you can get specific new papers from arXiv.\n\n\nGetting new papers proposals\nTo get new papers proposals, you have to run the personalized-papers command. That command requires two arguments:\n\ncategory: the arXiv top, or sub, category from which you want to get new papers proposals\nzotero_collection: the name of the Zotero collection where your papers of interest are stored in Zotero. This is what we refer to as the “Focus” collection above. The name of the collection is case sensitive and should be exactly as written in Zotero.\n\nThen you also have three options available:\n\n--proposals-collection: which tells ReadNext that you want to save the proposed papers in Zotero, in the Zotero Collection specified by the argument. If you don’t use this option, ReadNext will only print the proposed papers in the terminal, but will not save them in Zotero. The default behaviour is that you don’t save them in Zotero.\n--with-artifacts / -a: which tells ReadNext that you want to save the artifacts (PDF file of the papers and their summarization) into Zotero. This is the recommended workflow, but it requires a lot more space in your Zotero account. If you want to do this, you will most likely need to subscribe to one of their paid option.\n--nb-proposals: which tells ReadNext how many papers you want to be proposed. The default value is 10.\n\nThe following command will propose 3 papers from the cs.AI caterory, based on the Readnext-Focus-LLM collection in my Zotero library, save them in Zotero in the Readnext-Propositions-LLM with all related artifacts:\nreadnext personalized-papers cs.AI Readnext-Focus-LLM --proposals-collection=Readnext-Propositions-LLM --with-artifacts --nb-proposals=3\nAs you can see, you can easily create a series of topics you want papers proposals around, where each of the topic is defined by a series of specific papers that you read and found important for your research.\nHere is what it looks like in the terminal:\n\n\n\nPersonalized papers in CLI\n\n\nHere is what it looks like in Zotero:\n\n\n\nPersonalized papers in Zotero"
+  },
+  {
+    "objectID": "index.html#future-work",
+    "href": "index.html#future-work",
+    "title": "Read Next",
+    "section": "Future Work",
+    "text": "Future Work\nHere is a list of future work that could be done to improve ReadNext after the initial release:\n\nAdding an Abstraction Layer for Multiple Embedding Services: Currently, ReadNext utilizes Cohere for embeddings in its initial version. LangChain could serve as a potential abstraction layer to support multiple different embedding services.\nExpanding Paper Sources with an Abstraction Layer: ReadNext aims to integrate additional paper sources beyond just arXiv. This will be facilitated by implementing an abstraction layer for seamless integration.\nEnhancing Test Coverage: To improve testing, we will go beyond testing utility functions and incorporate mocks for external services, ensuring comprehensive test coverage.\nInteractive Configuration via Command Line Tool: We plan to augment the command line tool’s functionality, allowing users to configure it directly from the command line using appropriate prompts and interactions.\nRefining Paper Selection Process: Currently, every time readnext is executed, it retrieves today’s latest papers from arXiv, identifies relevant papers based on current interests, and matches them against the personal research focus. To further enhance this functionality, we may introduce additional capabilities, such as restricting proposed papers to today’s papers only."
+  },
+  {
+    "objectID": "index.html#contributions",
+    "href": "index.html#contributions",
+    "title": "Read Next",
+    "section": "Contributions",
+    "text": "Contributions\nWe welcome contributions to ReadNext! If you’d like to contribute, please follow these steps:\n\nFork the repository on GitHub.\nCreate a new branch with a descriptive name: git checkout -b feature/your-feature-name\nMake your changes and commit them: git commit -m \"Add feature: your feature name\"\nPush your changes to your fork: git push origin feature/your-feature-name\nSubmit a pull request to the main branch of the original repository."
+  },
+  {
+    "objectID": "arxiv_categories.html",
+    "href": "arxiv_categories.html",
+    "title": "arXiv Categories Taxonomy",
+    "section": "",
+    "text": "main = {'astro-ph': 'Astrophysics',\n        'cond-mat': 'Condensed Matter',\n        'cs': 'Computer Science',\n        'econ': 'Economics',\n        'eess': 'Electrical Engineering and Systems Science',\n        'gr-qc': 'General Relativity and Quantum Cosmology',\n        'hep-ex': 'High Energy Physics - Experiment',\n        'hep-lat': 'High Energy Physics - Lattice',\n        'hep-ph': 'High Energy Physics - Phenomenology',\n        'hep-th': 'High Energy Physics - Theory',\n        'math-ph': 'Mathematical Physics',\n        'math': 'Mathematics',\n        'nlin': 'Nonlinear Sciences',\n        'nucl-ex': 'Nuclear Experiment',\n        'nucl-th': 'Nuclear Theory',\n        'physics': 'Physics',\n        'q-bio': 'Quantitative Biology',\n        'q-fin': 'Quantitative Finance',\n        'quant-ph': 'Quantum Physics',\n        'stat': 'Statistics'}"
+  },
+  {
+    "objectID": "arxiv_categories.html#top-categories",
+    "href": "arxiv_categories.html#top-categories",
+    "title": "arXiv Categories Taxonomy",
+    "section": "",
+    "text": "main = {'astro-ph': 'Astrophysics',\n        'cond-mat': 'Condensed Matter',\n        'cs': 'Computer Science',\n        'econ': 'Economics',\n        'eess': 'Electrical Engineering and Systems Science',\n        'gr-qc': 'General Relativity and Quantum Cosmology',\n        'hep-ex': 'High Energy Physics - Experiment',\n        'hep-lat': 'High Energy Physics - Lattice',\n        'hep-ph': 'High Energy Physics - Phenomenology',\n        'hep-th': 'High Energy Physics - Theory',\n        'math-ph': 'Mathematical Physics',\n        'math': 'Mathematics',\n        'nlin': 'Nonlinear Sciences',\n        'nucl-ex': 'Nuclear Experiment',\n        'nucl-th': 'Nuclear Theory',\n        'physics': 'Physics',\n        'q-bio': 'Quantitative Biology',\n        'q-fin': 'Quantitative Finance',\n        'quant-ph': 'Quantum Physics',\n        'stat': 'Statistics'}"
+  },
+  {
+    "objectID": "arxiv_categories.html#sub-categories",
+    "href": "arxiv_categories.html#sub-categories",
+    "title": "arXiv Categories Taxonomy",
+    "section": "Sub Categories",
+    "text": "Sub Categories\n\nsub = { 'astro-ph': 'Astrophysics',\n        'astro-ph.CO': 'Cosmology and Nongalactic Astrophysics',\n        'astro-ph.EP': 'Earth and Planetary Astrophysics',\n        'astro-ph.GA': 'Astrophysics of Galaxies',\n        'astro-ph.HE': 'High Energy Astrophysical Phenomena',\n        'astro-ph.IM': 'Instrumentation and Methods for Astrophysics',\n        'astro-ph.SR': 'Solar and Stellar Astrophysics',\n        'cond-mat.dis-nn': 'Disordered Systems and Neural Networks',\n        'cond-mat.mes-hall': 'Mesoscale and Nanoscale Physics',\n        'cond-mat.mtrl-sci': 'Materials Science',\n        'cond-mat.other': 'Other Condensed Matter',\n        'cond-mat.quant-gas': 'Quantum Gases',\n        'cond-mat.soft': 'Soft Condensed Matter',\n        'cond-mat.stat-mech': 'Statistical Mechanics',\n        'cond-mat.str-el': 'Strongly Correlated Electrons',\n        'cond-mat.supr-con': 'Superconductivity',\n        'cs.AI': 'Artificial Intelligence',\n        'cs.AR': 'Hardware Architecture',\n        'cs.CC': 'Computational Complexity',\n        'cs.CE': 'Computational Engineering, Finance, and Science',\n        'cs.CG': 'Computational Geometry',\n        'cs.CL': 'Computation and Language',\n        'cs.CR': 'Cryptography and Security',\n        'cs.CV': 'Computer Vision and Pattern Recognition',\n        'cs.CY': 'Computers and Society',\n        'cs.DB': 'Databases',\n        'cs.DC': 'Distributed, Parallel, and Cluster Computing',\n        'cs.DL': 'Digital Libraries',\n        'cs.DM': 'Discrete Mathematics',\n        'cs.DS': 'Data Structures and Algorithms',\n        'cs.ET': 'Emerging Technologies',\n        'cs.FL': 'Formal Languages and Automata Theory',\n        'cs.GL': 'General Literature',\n        'cs.GR': 'Graphics',\n        'cs.GT': 'Computer Science and Game Theory',\n        'cs.HC': 'Human-Computer Interaction',\n        'cs.IR': 'Information Retrieval',\n        'cs.IT': 'Information Theory',\n        'cs.LG': 'Machine Learning',\n        'cs.LO': 'Logic in Computer Science',\n        'cs.MA': 'Multiagent Systems',\n        'cs.MM': 'Multimedia',\n        'cs.MS': 'Mathematical Software',\n        'cs.NA': 'Numerical Analysis',\n        'cs.NE': 'Neural and Evolutionary Computing',\n        'cs.NI': 'Networking and Internet Architecture',\n        'cs.OH': 'Other Computer Science',\n        'cs.OS': 'Operating Systems',\n        'cs.PF': 'Performance',\n        'cs.PL': 'Programming Languages',\n        'cs.RO': 'Robotics',\n        'cs.SC': 'Symbolic Computation',\n        'cs.SD': 'Sound',\n        'cs.SE': 'Software Engineering',\n        'cs.SI': 'Social and Information Networks',\n        'cs.SY': 'Systems and Control',\n        'econ.EM': 'Econometrics',\n        'eess.AS': 'Audio and Speech Processing',\n        'eess.IV': 'Image and Video Processing',\n        'eess.SP': 'Signal Processing',\n        'gr-qc': 'General Relativity and Quantum Cosmology',\n        'hep-ex': 'High Energy Physics - Experiment',\n        'hep-lat': 'High Energy Physics - Lattice',\n        'hep-ph': 'High Energy Physics - Phenomenology',\n        'hep-th': 'High Energy Physics - Theory',\n        'math.AC': 'Commutative Algebra',\n        'math.AG': 'Algebraic Geometry',\n        'math.AP': 'Analysis of PDEs',\n        'math.AT': 'Algebraic Topology',\n        'math.CA': 'Classical Analysis and ODEs',\n        'math.CO': 'Combinatorics',\n        'math.CT': 'Category Theory',\n        'math.CV': 'Complex Variables',\n        'math.DG': 'Differential Geometry',\n        'math.DS': 'Dynamical Systems',\n        'math.FA': 'Functional Analysis',\n        'math.GM': 'General Mathematics',\n        'math.GN': 'General Topology',\n        'math.GR': 'Group Theory',\n        'math.GT': 'Geometric Topology',\n        'math.HO': 'History and Overview',\n        'math.IT': 'Information Theory',\n        'math.KT': 'K-Theory and Homology',\n        'math.LO': 'Logic',\n        'math.MG': 'Metric Geometry',\n        'math.MP': 'Mathematical Physics',\n        'math.NA': 'Numerical Analysis',\n        'math.NT': 'Number Theory',\n        'math.OA': 'Operator Algebras',\n        'math.OC': 'Optimization and Control',\n        'math.PR': 'Probability',\n        'math.QA': 'Quantum Algebra',\n        'math.RA': 'Rings and Algebras',\n        'math.RT': 'Representation Theory',\n        'math.SG': 'Symplectic Geometry',\n        'math.SP': 'Spectral Theory',\n        'math.ST': 'Statistics Theory',\n        'math-ph': 'Mathematical Physics',\n        'nlin.AO': 'Adaptation and Self-Organizing Systems',\n        'nlin.CD': 'Chaotic Dynamics',\n        'nlin.CG': 'Cellular Automata and Lattice Gases',\n        'nlin.PS': 'Pattern Formation and Solitons',\n        'nlin.SI': 'Exactly Solvable and Integrable Systems',\n        'nucl-ex': 'Nuclear Experiment',\n        'nucl-th': 'Nuclear Theory',\n        'physics.acc-ph': 'Accelerator Physics',\n        'physics.ao-ph': 'Atmospheric and Oceanic Physics',\n        'physics.app-ph': 'Applied Physics',\n        'physics.atm-clus': 'Atomic and Molecular Clusters',\n        'physics.atom-ph': 'Atomic Physics',\n        'physics.bio-ph': 'Biological Physics',\n        'physics.chem-ph': 'Chemical Physics',\n        'physics.class-ph': 'Classical Physics',\n        'physics.comp-ph': 'Computational Physics',\n        'physics.data-an': 'Data Analysis, Statistics and Probability',\n        'physics.ed-ph': 'Physics Education',\n        'physics.flu-dyn': 'Fluid Dynamics',\n        'physics.gen-ph': 'General Physics',\n        'physics.geo-ph': 'Geophysics',\n        'physics.hist-ph': 'History and Philosophy of Physics',\n        'physics.ins-det': 'Instrumentation and Detectors',\n        'physics.med-ph': 'Medical Physics',\n        'physics.optics': 'Optics',\n        'physics.plasm-ph': 'Plasma Physics',\n        'physics.pop-ph': 'Popular Physics',\n        'physics.soc-ph': 'Physics and Society',\n        'physics.space-ph': 'Space Physics',\n        'q-bio.BM': 'Biomolecules',\n        'q-bio.CB': 'Cell Behavior',\n        'q-bio.GN': 'Genomics',\n        'q-bio.MN': 'Molecular Networks',\n        'q-bio.NC': 'Neurons and Cognition',\n        'q-bio.OT': 'Other Quantitative Biology',\n        'q-bio.PE': 'Populations and Evolution',\n        'q-bio.QM': 'Quantitative Methods',\n        'q-bio.SC': 'Subcellular Processes',\n        'q-bio.TO': 'Tissues and Organs',\n        'q-fin.CP': 'Computational Finance',\n        'q-fin.EC': 'Economics',\n        'q-fin.GN': 'General Finance',\n        'q-fin.MF': 'Mathematical Finance',\n        'q-fin.PM': 'Portfolio Management',\n        'q-fin.PR': 'Pricing of Securities',\n        'q-fin.RM': 'Risk Management',\n        'q-fin.ST': 'Statistical Finance',\n        'q-fin.TR': 'Trading and Market Microstructure',\n        'quant-ph': 'Quantum Physics',\n        'stat.AP': 'Applications',\n        'stat.CO': 'Computation',\n        'stat.ME': 'Methodology',\n        'stat.ML': 'Machine Learning',\n        'stat.OT': 'Other Statistics',\n        'stat.TH': 'Statistics Theory'}"
+  },
+  {
+    "objectID": "arxiv_categories.html#exists",
+    "href": "arxiv_categories.html#exists",
+    "title": "arXiv Categories Taxonomy",
+    "section": "Exists",
+    "text": "Exists\nThe exists function is used to check if a category exists in the taxonomy. It returns True if the category exists, False otherwise.\n\n\nexists\n\n exists (category:str)\n\nCheck if a category, or a subcategory exists in the arXiv taxonomy.\n\n\nTests\n\nassert exists(\"cs\") == True\nassert exists(\"all\") == True\nassert exists(\"cs.AI\") == True\nassert exists(\"cs.ai\") == False\nassert exists(\"cs.FOO\") == False\nassert exists(\"foo\") == False\nassert exists(\"alll\") == False"
+  },
+  {
+    "objectID": "embedding.html#download-embedding-model",
+    "href": "embedding.html#download-embedding-model",
+    "title": "Embeddings",
+    "section": "Download Embedding Model",
+    "text": "Download Embedding Model\nTo be able to use local embedding model, the first step is to download them from Hugging Face using their Transformers library and save them locally on the file system.\n\n\ndownload_embedding_model\n\n download_embedding_model (model_path:str, model_name:str)\n\nDownload a Hugging Face model and tokenizer to the specified directory\n\n\nTests\n\nfrom shutil import rmtree\n\n\ndownload_embedding_model('test-download/', 'prajjwal1/bert-tiny')\n\nassert os.path.exists('test-download/config.json')\nassert os.path.exists('test-download/pytorch_model.bin')\nassert os.path.exists('test-download/special_tokens_map.json')\nassert os.path.exists('test-download/tokenizer_config.json')\nassert os.path.exists('test-download/vocab.txt')\n\n# tears down \nrmtree('test-download/')"
+  },
+  {
+    "objectID": "embedding.html#load-embedding-model",
+    "href": "embedding.html#load-embedding-model",
+    "title": "Embeddings",
+    "section": "Load Embedding Model",
+    "text": "Load Embedding Model\nOnce the models are available locally, the next step is to load them in memory to be able to use them to create the embeddings for the PDF files. Because load_embedding_model can be called numerous time, we do memoize the result to speed up the process. There is no need to use a LRU cache here since only a single item should be cached anyway, so let’s simplify the code.\n\n\nload_embedding_model\n\n load_embedding_model (model_path:str)\n\nLoad a Hugging Face model and tokenizer from the specified directory\n\n\nTests\n\nfrom shutil import rmtree\n\n\ndownload_embedding_model('test-download/', 'prajjwal1/bert-tiny')\n\nmodel, tokenizer = load_embedding_model('test-download/')\n\nassert model is not None\nassert tokenizer is not None\n\n# tears down \nrmtree('test-download/')"
+  },
+  {
+    "objectID": "embedding.html#embed-local-model",
+    "href": "embedding.html#embed-local-model",
+    "title": "Embeddings",
+    "section": "Embed (Local Model)",
+    "text": "Embed (Local Model)\n\n\nembed_text\n\n embed_text (text:str, model, tokenizer)\n\nEmbed a text using a Hugging Face model and tokenizer\n\n\nTests\n\nfrom shutil import rmtree\n\n\ndownload_embedding_model('test-download/', 'BAAI/bge-base-en')\n\nmodel, tokenizer = load_embedding_model('test-download/')\n\ntensor = embed_text('Hello world!', model, tokenizer)\n\nassert len(tensor.tolist()[0]) == 128\n\n# tears down \nrmtree('test-download/')"
+  },
+  {
+    "objectID": "embedding.html#get-embedding-system",
+    "href": "embedding.html#get-embedding-system",
+    "title": "Embeddings",
+    "section": "Get Embedding System",
+    "text": "Get Embedding System\nWe need to be able to easily identify the embedding system currently configured by the user. This is a utility function to simply the comprehension of the code elsewhere in the codebase.\n\n\nembedding_system\n\n embedding_system ()\n\nReturn a unique identifier for the embedding system currently in use"
+  },
+  {
+    "objectID": "embedding.html#get-embeddings-from-any-supporter-system",
+    "href": "embedding.html#get-embeddings-from-any-supporter-system",
+    "title": "Embeddings",
+    "section": "Get Embeddings (From any supporter system)",
+    "text": "Get Embeddings (From any supporter system)\n\n\nget_embeddings\n\n get_embeddings (text:str)\n\nGet embeddings for a text using any supported embedding system."
+  },
+  {
+    "objectID": "embedding.html#pdf-to-text",
+    "href": "embedding.html#pdf-to-text",
+    "title": "Embeddings",
+    "section": "PDF to Text",
+    "text": "PDF to Text\nThe library PdfReader is used to extract the text from the PDF files.\n\n\npdf_to_text\n\n pdf_to_text (file_path:str)\n\nRead a PDF file and output it as a text string.\n\n\nTests\n\nassert pdf_to_text(\"../tests/assets/test.pdf\") == \"this is a test\"\nassert pdf_to_text(\"../tests/assets/test.pdf\") != \"this is a test foo\""
+  },
+  {
+    "objectID": "embedding.html#get-pdf-files-from-a-folder",
+    "href": "embedding.html#get-pdf-files-from-a-folder",
+    "title": "Embeddings",
+    "section": "Get PDF files from a folder",
+    "text": "Get PDF files from a folder\n\n\nget_pdfs_from_folder\n\n get_pdfs_from_folder (folder_path:str)\n\nGiven a folder path, return all the PDF files existing in that folder.\n\n\nTests\n\nassert get_pdfs_from_folder(\"../tests/assets/\") == ['test.pdf']\nassert get_pdfs_from_folder(\"../tests/assets/\") != ['test.pdf', 'foo.pdf']"
+  },
+  {
+    "objectID": "embedding.html#get-chroma-collection-name",
+    "href": "embedding.html#get-chroma-collection-name",
+    "title": "Embeddings",
+    "section": "Get Chroma Collection Name",
+    "text": "Get Chroma Collection Name\nIt is important that the number of dimensions of the embedding is the same in a Chroma collection and when it gets queried. For example, depending what the users want to use, he may at one time use the local embedding model and at another time use the Cohere embedding service. In both cases, the number of dimensions of the embedding will be different. To avoid this problem, we use the name of the collection to determine the number of dimensions of the embedding. This way, the number of dimensions will be the same for a given collection, no matter what embedding model is used.\n\ndef get_chroma_collection_name(name: str) -&gt; str:\n    \"\"\"Get the name of the ChromaDB collection to use.\"\"\"\n    \n    return os.environ.get('CHROMA_COLLECTION_NAME')"
+  },
+  {
+    "objectID": "embedding.html#embed-all-papers-of-a-arxiv-category",
+    "href": "embedding.html#embed-all-papers-of-a-arxiv-category",
+    "title": "Embeddings",
+    "section": "Embed all papers of a arXiv category",
+    "text": "Embed all papers of a arXiv category\nThe embedding database management system ReadNext uses is Chroma.\nThe embedding DBMS is organized as follows:\n\nEach category (sub or top categories) become a collection of embeddings\nWe have one global collection named all that contains all the embeddings of every known categories\n\nWhen a new arXiv category is being processing, all the embeddings of the papers it contains will be added to the collection related to its category, and to the global collection.\nFor the category collection, we have to prefix each category with _arxiv to avoid the restriction that Chroma won’t accept a collection name with less than three characters.\n\n\nembed_category_papers\n\n embed_category_papers (category:str)\n\nGiven a ArXiv category, create the embeddings for each of the PDF paper existing locally. Embeddings is currently using Cohere’s embedding service. Returns True if successful, False otherwise."
+  },
+  {
+    "objectID": "arxiv_sync.html",
+    "href": "arxiv_sync.html",
+    "title": "arXiv Synchronization",
+    "section": "",
+    "text": "Load default .dotenv file for running the test upon the execution of this notebook. You can remove '../.dotenv' if you already configured your .env file locally.\nfrom dotenv import load_dotenv\nimport os\nload_dotenv('../.dotenv')"
+  },
+  {
+    "objectID": "arxiv_sync.html#imports",
+    "href": "arxiv_sync.html#imports",
+    "title": "arXiv Synchronization",
+    "section": "Imports",
+    "text": "Imports\n\nimport concurrent.futures\nimport feedparser\nimport os\nimport re\nimport urllib.request\nfrom pypdf import PdfReader\nfrom readnext.arxiv_categories import exists\nfrom rich import print\nfrom rich.progress import Progress"
+  },
+  {
+    "objectID": "arxiv_sync.html#get-daily-papers-from-arxiv",
+    "href": "arxiv_sync.html#get-daily-papers-from-arxiv",
+    "title": "arXiv Synchronization",
+    "section": "Get daily papers from arXiv",
+    "text": "Get daily papers from arXiv\nThe first step is to get all the new papers from arXiv. This is done by using their daily RSS feed for any given top, or sub, category. We parse the RSS feed to extract all new papers from the archive.\n\n\nget_arxiv_pdfs_url\n\n get_arxiv_pdfs_url (category:str)\n\nGet all the papers refferenced in the daily RSS feed on ArXiv for input ‘category’."
+  },
+  {
+    "objectID": "arxiv_sync.html#get-docs-path",
+    "href": "arxiv_sync.html#get-docs-path",
+    "title": "arXiv Synchronization",
+    "section": "Get Docs Path",
+    "text": "Get Docs Path\nThe synchronization process incurs downloading all the new PDF file for a category on the local file system. The DOCS_PATH environment variable specify where the documents will be saved.\nThe new PDF files will be saved in the DOCS_PATH/[category]/ folder. The get_docs_path function returns the path string to the folder for a given category.\n\n\nget_docs_path\n\n get_docs_path (category:str)\n\nGenerate the proper docs path from a category ID\n\n\nTests\n\nassert get_docs_path(\"cs\") == os.environ.get('DOCS_PATH').rstrip('/') + '/' + \"cs\" + '/'\nassert get_docs_path(\"cs.AI\") == os.environ.get('DOCS_PATH').rstrip('/') + '/' + \"cs.AI\" + '/'\nassert get_docs_path(\"cs.FOO\") != os.environ.get('DOCS_PATH').rstrip('/') + '/' + \"cs.AI\" + '/'"
+  },
+  {
+    "objectID": "arxiv_sync.html#delete-broken-pdf-files",
+    "href": "arxiv_sync.html#delete-broken-pdf-files",
+    "title": "arXiv Synchronization",
+    "section": "Delete broken PDF files",
+    "text": "Delete broken PDF files\nIn rare occurences, it may happen that the downloaded PDF file are broken. The current process to detect and fix this issue is to try to open every downloaded PDF with PdfReader. If an exception is thrown, then we simply delete the file and move on.\nIn the future, we will have to replace that mechanism with a better fail over mechanism.\nThe side effect of running delete_broken_pdf is that it may delete broken PDF files from the file system for a category.\n\n\ndelete_broken_pdf\n\n delete_broken_pdf (category:str)\n\nDetect and delete broken PDF files. TODO Next iteration needs a better fail over with retry when PDF files are broken from a download.\n\n\nTests\n\nfrom shutil import rmtree\nfrom os.path import split\n\n\nfrom unittest.mock import patch\n\nwith patch.dict('os.environ', {'DOCS_PATH': 'docs/'}):\n    # your code that uses os.environ.get('DOCS_PATH') here\n\n    # count the current number of PDF files in docs_path\n    docs_path = get_docs_path(\"cs\")\n    os.makedirs(docs_path, exist_ok=True)\n    pdf_files = os.listdir(docs_path)\n    pdf_files_count_before = len(pdf_files)\n\n    # create and empty PDF file at docs_path to produce an invalid PDF file\n    docs_path = get_docs_path(\"cs\")\n    open(docs_path + \"foo.pdf\", 'a').close()\n\n    # run delete_broken_pdf\n    delete_broken_pdf(\"cs\")\n\n    # count the number of PDF files in docs_path\n    pdf_files = os.listdir(docs_path)\n    pdf_files_count_after = len(pdf_files)\n\n    assert pdf_files_count_after == pdf_files_count_before\n\n    # cleanup\n    rmtree(split(split(docs_path)[0])[0])"
+  },
+  {
+    "objectID": "arxiv_sync.html#synchronize-with-arxiv",
+    "href": "arxiv_sync.html#synchronize-with-arxiv",
+    "title": "arXiv Synchronization",
+    "section": "Synchronize with arXiv",
+    "text": "Synchronize with arXiv\nThe sync_arxiv function is the main function that will synchronize the local file system with arXiv. It will download all the new PDF files from arXiv and delete any broken PDF files. It downloads three PDF files concurrently.\n\n\nsync_arxiv\n\n sync_arxiv (category:str)\n\nSynchronize all latest arxiv papers for category. Concurrently download three PDF files from ArXiv. The PDF files will be saved in the DOCS_PATH folder under the category’s sub-folder."
+  },
+  {
+    "objectID": "main.html",
+    "href": "main.html",
+    "title": "main",
+    "section": "",
+    "text": "The command line interface is using typer, a library to build command line interfaces. We also use arxiv to query their search service to display the articles’ titles from the list of IDs proposed by the system.\nOtherwise, we import all the internal modules of the project used to implement the different commands of the CLI.\n\nimport arxiv\nimport chromadb\nimport os\nimport typer\nfrom dotenv import load_dotenv\nfrom readnext import __version__\nfrom readnext.arxiv_categories import exists, main, sub\nfrom readnext.arxiv_sync import sync_arxiv\nfrom readnext.embedding import embed_category_papers, download_embedding_model, embedding_system\nfrom readnext.personalize import get_personalized_papers, save_personalized_papers_in_zotero\nfrom rich import print\nfrom typing_extensions import Annotated"
+  },
+  {
+    "objectID": "main.html#imports",
+    "href": "main.html#imports",
+    "title": "main",
+    "section": "",
+    "text": "The command line interface is using typer, a library to build command line interfaces. We also use arxiv to query their search service to display the articles’ titles from the list of IDs proposed by the system.\nOtherwise, we import all the internal modules of the project used to implement the different commands of the CLI.\n\nimport arxiv\nimport chromadb\nimport os\nimport typer\nfrom dotenv import load_dotenv\nfrom readnext import __version__\nfrom readnext.arxiv_categories import exists, main, sub\nfrom readnext.arxiv_sync import sync_arxiv\nfrom readnext.embedding import embed_category_papers, download_embedding_model, embedding_system\nfrom readnext.personalize import get_personalized_papers, save_personalized_papers_in_zotero\nfrom rich import print\nfrom typing_extensions import Annotated"
+  },
+  {
+    "objectID": "main.html#command-line-interface",
+    "href": "main.html#command-line-interface",
+    "title": "main",
+    "section": "Command line interface",
+    "text": "Command line interface\n\nversion\nThe version command displays the current installed version of ReadNext.\n\n\n\nversion\n\n version ()\n\nGet the current installed version of ReadNext\nYou can get the version number of the ReadNext instance installed of your machine by running:\nreadnext version\n\n\nConfiguration\nDisplay the current configuration of ReadNext.\n\n\n\nconfig\n\n config ()\n\nGet the current configuration of ReadNext\nYou can display the current configuration uptions picked-up by ReadNext by running:\nreadnext config\n\n\narxiv-top-categories\nThe arxiv-top-categories command displays the complete list of ArXiv top categories. Note that the categories’ keys are case sensitive.\n\n\n\narxiv_top_categories\n\n arxiv_top_categories ()\n\nDisplay ArXiv main categories. Keys are case sensitive.\nYou can get the list of all the top categories by using this command line:\nreadnext arxiv-top-categories\n\n\narxiv-sub-categories\nThe arxiv-sub-categories command displays the complete list of ArXiv sub categories. Note that the categories’ keys are case sensitive.\nThe arxiv sub categories are:\n\n\n\narxiv_sub_categories\n\n arxiv_sub_categories ()\n\nDisplay ArXiv sub categories. Keys are case sensitive.\nYou can get the list of all the sub categories by using this command line:\nreadnext arxiv-sub-categories"
+  },
+  {
+    "objectID": "main.html#personalized-papers",
+    "href": "main.html#personalized-papers",
+    "title": "main",
+    "section": "personalized-papers",
+    "text": "personalized-papers\nThe personalized-papers command gives a list of personalized papers based on the user’s current research focus. That command has two required parameters and three optional:\n\ncategory [required] : the ArXiv category to use to query the ArXiv search service. It can be a top or sub category, case sentitive.\nfocus_collection [required] : the name of the Zotero collection where all the user’s papers of interest are available for ReadNext.\nproposals_collection [default: “”] : the name of the Zotero collection where the papers proposed by ReadNext will be added.\nwith_artifacts [default: False] : if set to True, the artifacts related to the proposed papers (PDF & summary files) will be added to Zotero.\nnb_proposals [default: 10] : the number of papers that will be proposed by ReadNext.\n\nTo get new papers proposals, you have to run the personalized-papers command. That command requires two arguments:\n\ncategory [required] : the arXiv top, or sub, category from which you want to get new papers proposals\nzotero_collection [required] : the name of the Zotero collection where your papers of interest are stored in Zotero. This is what we refer to as the “Focus” collection above. The name of the collection is case sensitive and should be exactly as written in Zotero.\n\nThen you also have three options available:\n\n--proposals-collection [default: “”] : which tells ReadNext that you want to save the proposed papers in Zotero, in the Zotero Collection specified by the argument. If you don’t use this option, ReadNext will only print the proposed papers in the terminal, but will not save them in Zotero. The default behaviour is that you don’t save them in Zotero.\n--with-artifacts / -a [default: False] : which tells ReadNext that you want to save the artifacts (PDF file of the papers and their summarization) into Zotero. This is the recommended workflow, but it requires a lot more space in your Zotero account. If you want to do this, you will most likely need to subscribe to one of their paid option.\n--nb-proposals [default: 10] : which tells ReadNext how many papers you want to be proposed.\n\nThe following command will propose 3 papers from the cs.AI caterory, based on the Readnext-Focus-LLM collection in my Zotero library, save them in Zotero in the Readnext-Propositions-LLM with all related artifacts:\nreadnext personalized-papers cs.AI Readnext-Focus-LLM --proposals-collection=Readnext-Propositions-LLM --with-artifacts --nb-proposals=3\nAs you can see, you can easily create a series of topics you want papers proposals around, where each of the topic is defined by a series of specific papers that you read and found important for your research.\n\n\npersonalized_papers\n\n personalized_papers (category:str, focus_collection:str, proposals_collec\n                      tion:typing.Annotated[str,&lt;typer.models.OptionInfoob\n                      jectat0x7f14ec87f910&gt;]='', with_artifacts:typing.Ann\n                      otated[bool,&lt;typer.models.OptionInfoobjectat0x7f14ec\n                      87f6d0&gt;]=False, nb_proposals=10)\n\nGet personalized papers of a focus-collection from an ArXiv category. If the category is all then all categories that have been locally synced will be used. if –proposals-collection is set, then the papers will be uploaded to the that Zotero collection, otherwise it will only be displayed to the command line."
+  },
+  {
+    "objectID": "main.html#initialize",
+    "href": "main.html#initialize",
+    "title": "main",
+    "section": "Initialize",
+    "text": "Initialize\nBefore running the command line application, we have to make sure that the tool is properly initialized. The current initialization steps that are required are:\n\nLoad environment variables\nMake sure that all the configuration options are properly set as environment variables.\nCheck that all the required local models artifacts are available on the local file system. If not, download them from their source.\n\n\n\nconfig_check_one_exists\n\n config_check_one_exists (env_vars:list)\n\nCheck if one of the env_vars environment variables exists\n\n\n\nconfig_exists\n\n config_exists (env_var:str)\n\nCheck if env_var environment variable exists\nOne thing that needs to be validated at initialization time is the shape of the embeddings in ChromaDB. If the user changed the setting EMBEDDING_SYSTEM from one system to another, then most likely that the number of dimentions will be different. If it is the case, then Chroma won’t be able to load the embeddings with a different dimention. This is why we have to warn the user.\n\n\n\nget_embeddings_dimensions\n\n get_embeddings_dimensions (chroma_client, category:str)\n\nGet the embedding dimensions of the given category\n\n\n\ninit\n\n init ()\n\nInitialize the application"
+  },
+  {
+    "objectID": "main.html#entry-point",
+    "href": "main.html#entry-point",
+    "title": "main",
+    "section": "Entry point",
+    "text": "Entry point"
+  }
+]

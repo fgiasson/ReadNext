@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ReadNext - Read Next</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="ReadNext - Read Next">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://fgiasson.github.io/ReadNext/images/personalized-papers-in-cli.jpg">
+<meta property="og:site-name" content="ReadNext">
+<meta name="twitter:title" content="ReadNext - Read Next">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://fgiasson.github.io/ReadNext/images/personalized-papers-in-cli.jpg">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ReadNext</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Read Next</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Read Next</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./main.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">main</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arxiv_categories.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">arXiv Categories Taxonomy</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arxiv_sync.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">arXiv Synchronization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embeddings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./personalize.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Personalization</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#readnext-a-personal-papers-recommender" id="toc-readnext-a-personal-papers-recommender" class="nav-link active" data-scroll-target="#readnext-a-personal-papers-recommender">ReadNext: A Personal Papers Recommender</a></li>
+  <li><a href="#install" id="toc-install" class="nav-link" data-scroll-target="#install">Install</a></li>
+  <li><a href="#requirements" id="toc-requirements" class="nav-link" data-scroll-target="#requirements">Requirements</a>
+  <ul class="collapse">
+  <li><a href="#zotero-account" id="toc-zotero-account" class="nav-link" data-scroll-target="#zotero-account">Zotero Account</a></li>
+  <li><a href="#cohere-account-optional" id="toc-cohere-account-optional" class="nav-link" data-scroll-target="#cohere-account-optional">Cohere Account (Optional)</a></li>
+  </ul></li>
+  <li><a href="#configure" id="toc-configure" class="nav-link" data-scroll-target="#configure">Configure</a>
+  <ul class="collapse">
+  <li><a href="#setup-environment-variables" id="toc-setup-environment-variables" class="nav-link" data-scroll-target="#setup-environment-variables">Setup Environment Variables</a></li>
+  </ul></li>
+  <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works?</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a>
+  <ul class="collapse">
+  <li><a href="#help" id="toc-help" class="nav-link" data-scroll-target="#help">Help</a></li>
+  <li><a href="#arxiv-categories-and-subcategories" id="toc-arxiv-categories-and-subcategories" class="nav-link" data-scroll-target="#arxiv-categories-and-subcategories">arXiv categories and subcategories</a></li>
+  <li><a href="#getting-new-papers-proposals" id="toc-getting-new-papers-proposals" class="nav-link" data-scroll-target="#getting-new-papers-proposals">Getting new papers proposals</a></li>
+  </ul></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  <li><a href="#contributions" id="toc-contributions" class="nav-link" data-scroll-target="#contributions">Contributions</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/fgiasson/ReadNext/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Read Next</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="readnext-a-personal-papers-recommender" class="level2">
+<h2 class="anchored" data-anchor-id="readnext-a-personal-papers-recommender">ReadNext: A Personal Papers Recommender</h2>
+<p>Every day, approximately 500 new papers are published in the <code>cs</code> category on arXiv, with tens more in <code>cs.AI</code> alone. Amidst the recent craze around Generative AI, I found it increasingly challenging to keep up with the rapid influx of papers. Distilling the ones that were most relevant to my work and my employer’s interests became a daunting task.</p>
+<p>ReadNext was born out of these pressing needs:</p>
+<ul>
+<li>The necessity for a command-line tool, one that could be executed directly or scheduled as a cron job.</li>
+<li>The requirement to access the latest papers from <a href="https://arxiv.org">arXiv</a>.</li>
+<li>The integration with <a href="https://www.zotero.org">Zotero</a>, an excellent tool for managing academic papers.</li>
+<li>The ability to propose a selection of <code>x</code> potentially relevant papers based on my current research focus.</li>
+<li>The proposed papers should be accessible from the command line.</li>
+<li>The proposed papers should also be easily uploaded to Zotero.</li>
+</ul>
+<p>The key focus is to recommend papers that align with my evolving interests and research objectives, which may change on a daily basis and need to be continuously accounted for.</p>
+</section>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<p>You can easily install the ReadNext command line tool using <code>pip</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pip</span> install readnext</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="requirements" class="level2">
+<h2 class="anchored" data-anchor-id="requirements">Requirements</h2>
+<p>ReadNext relies on one fundamental external services to create the propose user workflow:</p>
+<ul>
+<li><code>Zotero</code>: Zotero serves as the primary papers management tool, playing a pivotal role in ReadNext’s workflow. To configure ReadNext on your local computer, you have to create a Zotero account. If you do not already have one, you will have to create one for yourself, please refer to the section below.</li>
+</ul>
+<p>By integrating Zotero, ReadNext helps in discovering papers that align with your research interests and focus.</p>
+<p>The second piece of the command line tool is the embedding system. That system is used to create embeddings that are used to recommend papers to users according to their current research focus. By default, ReadNext is using the <code>BAAI/bge-base-en</code> <a href="https://huggingface.co/BAAI/bge-base-en">model from Hugging Face</a>. Optionally, you can use the Cohere embedding service instead. The processing is a little bit faster depending on your local desktop, but it requires and additional dependency.</p>
+<p>Also note that the performance between the two systems are comparable. In my experience, about 80% of the propositions are the same, and the remaining 20% that are different yeld no major difference in accuracy. However, I do prefer the <code>BAAI/bge-base-en</code> propositions a little better.</p>
+<section id="zotero-account" class="level3">
+<h3 class="anchored" data-anchor-id="zotero-account">Zotero Account</h3>
+<p>If you do not have a Zotero account yet, you can <a href="https://www.zotero.org/user/register">create one here for free</a>. This will give you a basic account with <code>200MB</code> of space, sufficient to get started. Afterwards, you can install the desktop application, mobile apps, and necessary browser plugins to fully integrate Zotero into your digital environment.</p>
+<p>Take the time to refer to <a href="https://www.zotero.org/support/">their extensive online documentation</a> to get to know its full potential.</p>
+</section>
+<section id="cohere-account-optional" class="level3">
+<h3 class="anchored" data-anchor-id="cohere-account-optional">Cohere Account (Optional)</h3>
+<p>For Cohere, you will have to <a href="https://dashboard.cohere.ai/welcome/register">create an account and login on their Dashboard</a>. The services are completely free for the volume and size of request required by ReadNext.</p>
+</section>
+</section>
+<section id="configure" class="level2">
+<h2 class="anchored" data-anchor-id="configure">Configure</h2>
+<p>ReadNext currently needs to be configured using the environment variables of your terminal session. The following configuration options currently needs to be configured:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>COHERE_API_KEY</td>
+<td>Cohere API Key as <a href="https://dashboard.cohere.ai/api-keys">created in their Dashboard here</a></td>
+</tr>
+<tr class="even">
+<td>ZOTERO_LIBRARY_ID</td>
+<td>Your personal library ID as defined in Zotero’s backend. This <a href="https://www.zotero.org/settings/keys">ID will appears here</a> as <code>Your userID for use in API calls is 750</code></td>
+</tr>
+<tr class="odd">
+<td>ZOTERO_LIBRARY_TYPE</td>
+<td>Type of library: <code>user</code> or <code>group</code></td>
+</tr>
+<tr class="even">
+<td>ZOTERO_API_KEY</td>
+<td>You Zotero API Key, <a href="https://www.zotero.org/settings/keys">it needs to be created and managed here</a>.</td>
+</tr>
+<tr class="odd">
+<td>CHROMA_DB_PATH</td>
+<td>This is the local path where you want the embedding database management system to save its indexes (ex: <code>/Users/me/.readnext/chroma_db/</code>)</td>
+</tr>
+<tr class="even">
+<td>EMBEDDING_SYSTEM</td>
+<td>This is the embedding system you want to use. One of: <code>BAAI/bge-base-en</code> (local) or <code>cohere</code>.</td>
+</tr>
+<tr class="odd">
+<td>MODELS_PATH</td>
+<td>This is the local path where you want the models files to be saved on your local file system (ex: <code>/Users/me/.readnext/models/</code>)</td>
+</tr>
+<tr class="even">
+<td>DOCS_PATH</td>
+<td>This is the local path where you want the PDF files of the papers from arXiv to be saved locally (ex: <code>/Users/me/.readnext/docs/</code>)</td>
+</tr>
+<tr class="odd">
+<td>RECOMMENDATIONS_PATH</td>
+<td>This is the local path where you want the recommended papers to be saved locally (ex: <code>/Users/me/.readnext/recommendations/</code>)</td>
+</tr>
+</tbody>
+</table>
+<section id="setup-environment-variables" class="level3">
+<h3 class="anchored" data-anchor-id="setup-environment-variables">Setup Environment Variables</h3>
+<section id="for-windows" class="level4">
+<h4 class="anchored" data-anchor-id="for-windows">For Windows</h4>
+<ol type="1">
+<li>Open the Command Prompt or PowerShell.</li>
+<li>Use the <code>setx</code> command to create a new environment variable permanently. For example, to set the <code>ZOTERO_API_KEY</code>, you can use the following command:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">setx</span> ZOTERO_API_KEY <span class="st">"your_zotero_api_key_here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The changes will take effect after you open a new command prompt or restart your computer.</p>
+</section>
+<section id="macos-and-linux" class="level4">
+<h4 class="anchored" data-anchor-id="macos-and-linux">MacOS and Linux:</h4>
+<ol type="1">
+<li>Open the Terminal.</li>
+<li>Use the <code>export</code> command to set the environment variable for the current session. For example, to set the <code>ZOTERO_API_KEY</code>, use the following command:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ZOTERO_API_KEY</span><span class="op">=</span><span class="st">"your_zotero_api_key_here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will set the <code>ZOTERO_API_KEY</code> variable for the current session only.</p>
+<p>To make the variable permanent, add the <code>export</code> command to your shell’s configuration file. For example, if you’re using Bash, add the line to the <code>~/.bashrc</code> or <code>~/.bash_profile</code> file. If you’re using Zsh, add it to the <code>~/.zshrc</code> file. You can do this with a text editor or by using the following command:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export ZOTERO_API_KEY="your_zotero_api_key_here"'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Replace <code>~/.bashrc</code> with the appropriate file name if you’re using a different shell configuration.</p>
+<p>After saving the environment variables, they will be available in your command line sessions, and any application that relies on them, such as ReadNext, will be able to access the configured values. Remember to restart your command line or open a new session after making changes to ensure the environment variables take effect.</p>
+<p>You can verify that the environment variables are set by running the <code>env</code> command in your terminal session.</p>
+<p>Here is what the full export looks like:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COHERE_API_KEY</span><span class="op">=</span><span class="st">""</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ZOTERO_LIBRARY_ID</span><span class="op">=</span><span class="st">""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ZOTERO_API_KEY</span><span class="op">=</span><span class="st">""</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ZOTERO_LIBRARY_TYPE</span><span class="op">=</span><span class="st">"user"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">EMBEDDING_SYSTEM</span><span class="op">=</span><span class="st">"BAAI/bge-base-en"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CHROMA_DB_PATH</span><span class="op">=</span><span class="st">"/Users/[MY-USER/.readnext/chroma_db/"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MODELS_PATH</span><span class="op">=</span><span class="st">"/Users/[MY-USER]/.readnext/models/"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DOCS_PATH</span><span class="op">=</span><span class="st">"/Users/[MY-USER]/.readnext/docs/"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RECOMMENDATIONS_PATH</span><span class="op">=</span><span class="st">"/Users/[MY-USER]/.readnext/recommendations/"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+</section>
+<section id="how-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-it-works">How it works?</h2>
+<p>ReadNext is a command line tool that can be used to generate personalized paper recommendations based on your research interests. It is designed to be used as a daily routine to help you discover new papers that are relevant to your research focus.</p>
+<p>The tool is designed to be used in conjunction with <a href="https://www.zotero.org/">Zotero</a>, a free and open-source reference management software to manage your research library. ReadNext will use your Zotero library to identify your research interests and focus, and will propose papers that are relevant to your research focus.</p>
+<p>ReadNext is designed to be used as a daily routine. It will propose a list of papers that are relevant to your research focus, and will save them in a dedicated collection in your Zotero library. You can then review the proposed papers and decide which ones you want to read. Once you have read a paper, you can move it to another collection in your Zotero library, and ReadNext will learn from your feedback to improve the quality of the proposed papers.</p>
+<p>ReadNext is designed to be used with with an embedding system. It uses the system to generate embeddings for the papers in your Zotero library, and will use these embeddings to identify papers that are similar to your research focus. Two embedding systems are currently support: a local one using the <code>BAAI/bge-base-en</code> model from Hugging Face, and a remote one using the Cohere embedding service.</p>
+<p>ReadNext is designed to be used with <a href="https://arxiv.org/">arXiv</a>, a free service that provides access to scientific papers in the fields of mathematics, physics, astronomy, computer science, quantitative biology, statistics, and quantitative finance. ReadNext will use arXiv to identify the latest papers in your research focus, and will propose them to you as part of your daily routine.</p>
+<p>The designed userflow is the following:</p>
+<ol type="1">
+<li>As a Zotero user, I will create one or multiple “Focus” collections in my Zotero library. Those are the collections where I will add the papers that are the most interesting to my current research. It is expected that the content of those collections will change over time as my research focus and interests evolves.</li>
+<li>On a daily basis, I will run <code>readnext</code> in my terminal, or I will create a cron job to run it automatically for me.
+<ol type="1">
+<li>ReadNext will fetch the latest papers from arXiv</li>
+<li>ReadNext will identify the papers that are relevant to your research focus, as defined in Zotero</li>
+<li>ReadNext will propose the relevant papers to me and add them to Zotero in a dedicated collection where proposed papers are saved</li>
+</ol></li>
+<li>I will go in Zotero, start to read the proposed papers, and if any are of a particular interest I will add them to one of the “Focus” collections</li>
+<li>ReadNext will learn from your feedback to improve the quality of the proposed papers</li>
+</ol>
+<p>Now, let’s see how to actually do this.</p>
+</section>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<section id="help" class="level3">
+<h3 class="anchored" data-anchor-id="help">Help</h3>
+<p>Any time, you can get contextual help for any command like this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readnext</span> <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readnext</span> personalized-papers <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Those commands will tell you which arguments and options are available for each command.</p>
+</section>
+<section id="arxiv-categories-and-subcategories" class="level3">
+<h3 class="anchored" data-anchor-id="arxiv-categories-and-subcategories">arXiv categories and subcategories</h3>
+<p>You can get the full list of arXiv categories and subcategories by running the following command:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readnext</span> arxiv-top-categories</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readnext</span> arxiv-sub-categories</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Those are the categories where you can get specific new papers from arXiv.</p>
+</section>
+<section id="getting-new-papers-proposals" class="level3">
+<h3 class="anchored" data-anchor-id="getting-new-papers-proposals">Getting new papers proposals</h3>
+<p>To get new papers proposals, you have to run the <code>personalized-papers</code> command. That command requires two arguments:</p>
+<ul>
+<li><code>category</code>: the arXiv top, or sub, category from which you want to get new papers proposals</li>
+<li><code>zotero_collection</code>: the name of the Zotero collection where your papers of interest are stored in Zotero. This is what we refer to as the “Focus” collection above. The name of the collection is case sensitive and should be exactly as written in Zotero.</li>
+</ul>
+<p>Then you also have three options available:</p>
+<ul>
+<li><code>--proposals-collection</code>: which tells ReadNext that you want to save the proposed papers in Zotero, in the Zotero Collection specified by the argument. If you don’t use this option, ReadNext will only print the proposed papers in the terminal, but will not save them in Zotero. The default behaviour is that you don’t save them in Zotero.</li>
+<li><code>--with-artifacts</code> / <code>-a</code>: which tells ReadNext that you want to save the artifacts (PDF file of the papers and their summarization) into Zotero. This is the recommended workflow, but it requires a lot more space in your Zotero account. If you want to do this, you will most likely need to subscribe to one of their paid option.</li>
+<li><code>--nb-proposals</code>: which tells ReadNext how many papers you want to be proposed. The default value is 10.</li>
+</ul>
+<p>The following command will propose 3 papers from the <code>cs.AI</code> caterory, based on the <code>Readnext-Focus-LLM</code> collection in my Zotero library, save them in Zotero in the <code>Readnext-Propositions-LLM</code> with all related artifacts:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readnext</span> personalized-papers cs.AI Readnext-Focus-LLM <span class="at">--proposals-collection</span><span class="op">=</span>Readnext-Propositions-LLM <span class="at">--with-artifacts</span> <span class="at">--nb-proposals</span><span class="op">=</span>3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As you can see, you can easily create a series of topics you want papers proposals around, where each of the topic is defined by a series of specific papers that you read and found important for your research.</p>
+<p>Here is what it looks like in the terminal:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/personalized-papers-in-cli.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Personalized papers in CLI</figcaption>
+</figure>
+</div>
+<p>Here is what it looks like in Zotero:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/personalized-papers-in-zotero.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Personalized papers in Zotero</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<p>Here is a list of future work that could be done to improve ReadNext after the initial release:</p>
+<ul>
+<li><strong>Adding an Abstraction Layer for Multiple Embedding Services</strong>: Currently, ReadNext utilizes Cohere for embeddings in its initial version. LangChain could serve as a potential abstraction layer to support multiple different embedding services.</li>
+<li><strong>Expanding Paper Sources with an Abstraction Layer</strong>: ReadNext aims to integrate additional paper sources beyond just arXiv. This will be facilitated by implementing an abstraction layer for seamless integration.</li>
+<li><strong>Enhancing Test Coverage</strong>: To improve testing, we will go beyond testing utility functions and incorporate mocks for external services, ensuring comprehensive test coverage.</li>
+<li><strong>Interactive Configuration via Command Line Tool</strong>: We plan to augment the command line tool’s functionality, allowing users to configure it directly from the command line using appropriate prompts and interactions.</li>
+<li><strong>Refining Paper Selection Process</strong>: Currently, every time readnext is executed, it retrieves today’s latest papers from arXiv, identifies relevant papers based on current interests, and matches them against the personal research focus. To further enhance this functionality, we may introduce additional capabilities, such as restricting proposed papers to today’s papers only.</li>
+</ul>
+</section>
+<section id="contributions" class="level2">
+<h2 class="anchored" data-anchor-id="contributions">Contributions</h2>
+<p>We welcome contributions to ReadNext! If you’d like to contribute, please follow these steps:</p>
+<ol type="1">
+<li>Fork the repository on GitHub.</li>
+<li>Create a new branch with a descriptive name: <code>git checkout -b feature/your-feature-name</code></li>
+<li>Make your changes and commit them: <code>git commit -m "Add feature: your feature name"</code></li>
+<li>Push your changes to your fork: <code>git push origin feature/your-feature-name</code></li>
+<li>Submit a pull request to the <code>main</code> branch of the original repository.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
