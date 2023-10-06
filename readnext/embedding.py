@@ -65,7 +65,6 @@ def embedding_system() -> str:
         return 'baai-bge-base-en'
     elif os.environ.get('EMBEDDING_SYSTEM') == 'cohere':
         return 'cohere'
-        embeddings = co.embed([text]).embeddings
     else:
         return ''
 
