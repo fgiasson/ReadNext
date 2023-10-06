@@ -87,12 +87,7 @@ def pdf_to_text(file_path: str) -> str:
     """Read a PDF file and output it as a text string."""
     with open(file_path, 'rb') as pdf_file_obj:
         pdf_reader = PdfReader(pdf_file_obj)
-        text = ''
-
-        for page in pdf_reader.pages:
-            text += page.extract_text()
-
-        return text
+        return ''.join(page.extract_text() for page in pdf_reader.pages)
 
 # %% ../nbs/03_embedding.ipynb 28
 def get_pdfs_from_folder(folder_path: str) -> list:
