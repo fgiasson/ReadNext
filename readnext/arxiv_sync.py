@@ -21,12 +21,7 @@ def get_arxiv_pdfs_url(category: str) -> list:
         feed = feedparser.parse('http://arxiv.org/rss/' + category)
 
         # get the URL of the PDF file of each paper from the RSS feed
-        URLs = []
-        for entry in feed.entries:
-            URLs.append(entry.link)
-
-        # return the list of the URL of the PDF file of the paper
-        return URLs
+        return [entry.link for entry in feed.entries]
     else:
         return []
 
