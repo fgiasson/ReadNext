@@ -98,13 +98,7 @@ def pdf_to_text(file_path: str) -> str:
 # %% ../nbs/03_embedding.ipynb 28
 def get_pdfs_from_folder(folder_path: str) -> list:
     """Given a folder path, return all the PDF files existing in that folder."""
-    pdfs = []
-
-    for pdf in os.listdir(folder_path):
-        if pdf.endswith(".pdf"):
-            pdfs.append(pdf)
-
-    return pdfs
+    return [pdf for pdf in os.listdir(folder_path) if pdf.endswith(".pdf")]
 
 # %% ../nbs/03_embedding.ipynb 34
 def embed_category_papers(category: str) -> bool:
